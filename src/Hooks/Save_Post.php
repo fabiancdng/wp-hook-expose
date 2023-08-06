@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class Save_Post for handling the WordPress hook 'save_post' and sending off the webhook request.
  */
-class Save_Post_Hook {
+class Save_Post {
 	/**
 	 * Handle the WordPress hook 'save_post' and send off the webhook request.
 	 *
@@ -35,56 +35,64 @@ class Save_Post_Hook {
 	/**
 	 * The saved post is a new post, send the webhook request for "Post Created".
 	 *
-	 * Option: wp_hook_expose['event_webhook_post_created']
+	 * Option: wp_hook_expose[event_webhook_post_created]
 	 *
 	 * @param int     $post_id The ID of the post that was just saved.
 	 * @param WP_Post $post    The post object that was just saved.
 	 */
 	public function handle_post_create( int $post_id, WP_Post $post ): void {
-		$webhook_url = get_option( 'wp_hook_expose' )['event_webhook_post_created'];
+		$webhook_url          = get_option( 'wp_hook_expose' )['event_webhook_post_created']['url'];
+		$webhook_request_body = get_option( 'wp_hook_expose' )['event_webhook_post_created']['request_body'];
 
 		// Check if $webhook_url is a valid URL.
 		if ( empty( $webhook_url ) || ! filter_var( $webhook_url, FILTER_VALIDATE_URL ) ) {
 			return;
 		}
 
-		// Send the post request.
-		wp_remote_post(
-			$webhook_url,
+		// Merge body with hook data.
+		$body = array_merge(
+			$webhook_request_body,
 			array(
 				'body' => array(
-					'post_id' => get_the_ID(),
+					'post_id' => $post_id,
 					'post'    => $post->to_array(),
 				),
 			)
 		);
+
+		// Send the post request.
+		wp_remote_post( $webhook_url, $body );
 	}
 
 	/**
 	 * The saved post is an existing post that has been updated, send the webhook request for "Post Updated".
 	 *
-	 * Option: wp_hook_expose['event_webhook_post_updated']
+	 * Option: wp_hook_expose[event_webhook_post_updated]
 	 *
 	 * @param int     $post_id The ID of the post that was just saved.
 	 * @param WP_Post $post    The post object that was just saved.
 	 */
 	public function handle_post_update( int $post_id, WP_Post $post ): void {
-		$webhook_url = get_option( 'wp_hook_expose' )['event_webhook_post_updated'];
+		$webhook_url          = get_option( 'wp_hook_expose' )['event_webhook_post_updated']['url'];
+		$webhook_request_body = get_option( 'wp_hook_expose' )['event_webhook_post_updated']['request_body'];
 
 		// Check if $webhook_url is a valid URL.
 		if ( empty( $webhook_url ) || ! filter_var( $webhook_url, FILTER_VALIDATE_URL ) ) {
 			return;
 		}
 
-		// Send the post request.
-		wp_remote_post(
-			$webhook_url,
+		// Merge body with hook data.
+		$body = array_merge(
+			$webhook_request_body,
 			array(
 				'body' => array(
-					'post_id' => get_the_ID(),
+					'post_id' => $post_id,
 					'post'    => $post->to_array(),
 				),
 			)
 		);
+
+		// Send the post request.
+		wp_remote_post( $webhook_url, $body );
 	}
 }

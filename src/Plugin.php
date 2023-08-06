@@ -7,7 +7,7 @@
 namespace Fabiancdng\WP_Hook_Expose;
 
 use Fabiancdng\WP_Hook_Expose\Options;
-use Fabiancdng\WP_Hook_Expose\Hooks\Save_Post_Hook;
+use Fabiancdng\WP_Hook_Expose\Hooks\Save_Post;
 
 // If this file is accessed directly, abort.
 defined( 'ABSPATH' ) || exit;
@@ -43,7 +43,7 @@ class Plugin {
 		add_action( 'admin_init', array( $options, 'register_settings' ) );
 
 		// Handle the WordPress hook 'save_post' and send off the webhook request.
-		$save_post_hook = new Save_Post_Hook();
+		$save_post_hook = new Save_Post();
 		add_action( 'save_post', array( $save_post_hook, 'handle' ), 10, 3 );
 	}
 }
