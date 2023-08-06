@@ -1,0 +1,18 @@
+{
+  "name": "fabiancdng/wp-hook-expose",
+  "description": "A lightweight plugin to create webhooks in WordPress.",
+  "type": "project",
+  "autoload": {
+    "psr-4": {
+      "Fabiancdng\\WP_Hook_Expose\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Fabian Reinders",
+      "email": "fabian@fabiancdng.com",
+      "homepage": "https://fabiancdng.com"
+    }
+  ],
+  "require": {}
+}
