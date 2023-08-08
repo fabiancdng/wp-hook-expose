@@ -15,6 +15,18 @@ defined( 'ABSPATH' ) || exit;
  */
 class Options {
 	/**
+	 * Calls the necessary hooks and filters to add the admin page for the options.
+	 *
+	 * The page is only actually added using `add_options_page()` if needed (ie. in wp-admin).
+	 */
+	public function register_options_page(): void {
+		// Hook call to add the options page.
+		add_action( 'admin_menu', array( $this, 'add_options_page' ) );
+		// Hook call to register the settings, settings sections and settings fields.
+		add_action( 'admin_init', array( $this, 'register_settings' ) );
+	}
+
+	/**
 	 * Add the plugin options page to the WordPress dashboard.
 	 */
 	public function add_options_page(): void {
@@ -45,6 +57,12 @@ class Options {
 
 		// Add a settings section for the "User Profile Updated" event.
 		$this->register_section_event_webhook( 'User Profile Updated', 'user_profile_updated' );
+
+		// Add a settings section for the "Category Created" event.
+		$this->register_section_event_webhook( 'Category Created', 'category_created' );
+
+		// Add a settings section for the "Category Updated" event.
+		$this->register_section_event_webhook( 'Category Updated', 'category_updated' );
 	}
 
 	/**

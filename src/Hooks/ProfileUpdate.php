@@ -16,6 +16,13 @@ defined( 'ABSPATH' ) || exit;
  */
 class ProfileUpdate {
 	/**
+	 * Subscribe the 'handle' method to the according WordPress hooks.
+	 */
+	public function subscribe_wp_hooks(): void {
+		add_action( 'profile_update', array( $this, 'handle' ), 10, 2 );
+	}
+
+	/**
 	 * Handle the WordPress hook 'profile_update' and send off the webhook request.
 	 *
 	 * @param int   $user_id   The ID of the user that was just registered.

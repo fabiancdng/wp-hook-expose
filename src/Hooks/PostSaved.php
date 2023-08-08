@@ -18,6 +18,13 @@ defined( 'ABSPATH' ) || exit;
  */
 class PostSaved {
 	/**
+	 * Subscribe the 'handle' method to the according WordPress hooks.
+	 */
+	public function subscribe_wp_hooks(): void {
+		add_action( 'save_post', array( $this, 'handle' ), 10, 3 );
+	}
+
+	/**
 	 * Handle the WordPress hook 'save_post' and send off the webhook request.
 	 *
 	 * @param int     $post_id The ID of the post that was just saved.
@@ -35,7 +42,7 @@ class PostSaved {
 	/**
 	 * The saved post is a new post, send the webhook request for "Post Created".
 	 *
-	 * Option: wp_hook_expose[event_webhook_post_created]
+	 * Option: wp_hook_expose[event_webhooks][post_created]
 	 *
 	 * @param int     $post_id The ID of the post that was just saved.
 	 * @param WP_Post $post    The post object that was just saved.
@@ -74,7 +81,7 @@ class PostSaved {
 	/**
 	 * The saved post is an existing post that has been updated, send the webhook request for "Post Updated".
 	 *
-	 * Option: wp_hook_expose[event_webhook_post_updated]
+	 * Option: wp_hook_expose[event_webhooks][post_updated]
 	 *
 	 * @param int     $post_id The ID of the post that was just saved.
 	 * @param WP_Post $post    The post object that was just saved.

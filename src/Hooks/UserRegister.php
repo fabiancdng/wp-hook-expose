@@ -15,6 +15,13 @@ defined( 'ABSPATH' ) || exit;
  */
 class UserRegister {
 	/**
+	 * Subscribe the 'handle' method to the according WordPress hooks.
+	 */
+	public function subscribe_wp_hooks(): void {
+		add_action( 'user_register', array( $this, 'handle' ), 10, 2 );
+	}
+
+	/**
 	 * Handle the WordPress hook 'user_register' and send off the webhook request.
 	 *
 	 * @param int   $user_id   The ID of the user that was just registered.
