@@ -45,5 +45,11 @@ class Plugin {
 		// Handle the WordPress hook 'save_post' and send off the webhook request.
 		$save_post_hook = new Save_Post();
 		add_action( 'save_post', array( $save_post_hook, 'handle' ), 10, 3 );
+
+		// Handle the WordPress hook 'profile_update' when an existing user has been updated and send off the webhook request.
+		//$user_updated_hook = new User_Updated();
+		//add_action( 'profile_update', array( $user_updated_hook, 'handle' ), 10, 2 );
+		//add_action( 'user_register', array( $user_updated_hook, 'handle' ), 10, 2 );
+
 	}
 }
