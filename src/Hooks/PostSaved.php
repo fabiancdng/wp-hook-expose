@@ -5,7 +5,7 @@
  * @package wp-hook-expose
  */
 
-namespace Fabiancdng\WP_Hook_Expose\Hooks;
+namespace Fabiancdng\WpHookExpose\Hooks;
 
 
 // If this file is accessed directly, abort.
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class Save_Post for handling the WordPress hook 'save_post' and sending off the webhook request.
  */
-class Save_Post {
+class PostSaved {
 	/**
 	 * Handle the WordPress hook 'save_post' and send off the webhook request.
 	 *
@@ -42,8 +42,8 @@ class Save_Post {
 	 */
 	public function handle_post_create( int $post_id, WP_Post $post ): void {
 		$options              = get_option( 'wp_hook_expose' );
-		$webhook_url          = $options['event_webhook_post_created']['url'];
-		$webhook_request_body = json_decode( $options['event_webhook_post_created']['body'], true );
+		$webhook_url          = $options['event_webhooks']['post_created']['url'];
+		$webhook_request_body = json_decode( $options['event_webhooks']['post_created']['body'], true );
 
 		// Check if $webhook_url is a valid URL and $webhook_request_body is an array.
 		if ( empty( $webhook_url ) || ! filter_var( $webhook_url, FILTER_VALIDATE_URL ) ) {
@@ -81,8 +81,8 @@ class Save_Post {
 	 */
 	public function handle_post_update( int $post_id, WP_Post $post ): void {
 		$options              = get_option( 'wp_hook_expose' );
-		$webhook_url          = $options['event_webhook_post_updated']['url'];
-		$webhook_request_body = json_decode( $options['event_webhook_post_updated']['body'], true );
+		$webhook_url          = $options['event_webhooks']['post_updated']['url'];
+		$webhook_request_body = json_decode( $options['event_webhooks']['post_updated']['body'], true );
 
 		// Check if $webhook_url is a valid URL and $webhook_request_body is an array.
 		if ( empty( $webhook_url ) || ! filter_var( $webhook_url, FILTER_VALIDATE_URL ) ) {

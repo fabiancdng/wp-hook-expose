@@ -16,4 +16,4 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once 'vendor/autoload.php';
 
 // Create a new instance of the plugin class and run it.
-\Fabiancdng\WP_Hook_Expose\Plugin::create_and_run();
+\Fabiancdng\WpHookExpose\Plugin::create_and_run();

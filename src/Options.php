@@ -4,7 +4,7 @@
  * @package wp-hook-expose
  */
 
-namespace Fabiancdng\WP_Hook_Expose;
+namespace Fabiancdng\WpHookExpose;
 
 
 // If this file is accessed directly, abort.
@@ -34,8 +34,17 @@ class Options {
 	public function register_settings(): void {
 		register_setting( 'wp_hook_expose', 'wp_hook_expose' );
 
-		// Add a settings section for the "Post Saved" event.
-		$this->register_section_event_webhook( 'Post Saved', 'post_saved' );
+		// Add a settings section for the "Post Created" event.
+		$this->register_section_event_webhook( 'Post Created', 'post_saved' );
+
+		// Add a setting section for the "Post Updated" event.
+		$this->register_section_event_webhook( 'Post Updated', 'post_updated' );
+
+		// Add a settings section for the "User Registered" event.
+		$this->register_section_event_webhook( 'User Registered', 'user_registered' );
+
+		// Add a settings section for the "User Profile Updated" event.
+		$this->register_section_event_webhook( 'User Profile Updated', 'user_profile_updated' );
 	}
 
 	/**

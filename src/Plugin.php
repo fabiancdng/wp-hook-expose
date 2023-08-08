@@ -4,10 +4,12 @@
  * @package wp-hook-expose
  */
 
-namespace Fabiancdng\WP_Hook_Expose;
+namespace Fabiancdng\WpHookExpose;
 
-use Fabiancdng\WP_Hook_Expose\Options;
-use Fabiancdng\WP_Hook_Expose\Hooks\Save_Post;
+use Fabiancdng\WpHookExpose\Hooks\ProfileUpdate;
+use Fabiancdng\WpHookExpose\Options;
+use Fabiancdng\WpHookExpose\Hooks\PostSaved;
+use Fabiancdng\WpHookExpose\Hooks\UserRegister;
 
 // If this file is accessed directly, abort.
 defined( 'ABSPATH' ) || exit;
@@ -43,13 +45,16 @@ class Plugin {
 		add_action( 'admin_init', array( $options, 'register_settings' ) );
 
 		// Handle the WordPress hook 'save_post' and send off the webhook request.
-		$save_post_hook = new Save_Post();
+		$save_post_hook = new PostSaved();
 		add_action( 'save_post', array( $save_post_hook, 'handle' ), 10, 3 );
 
+		// Handle the WordPress hook 'user_register' when a new user has been registered and send off the webhook request.
+		$user_register_hook = new UserRegister();
+		add_action( 'user_register', array( $user_register_hook, 'handle' ), 10, 2 );
+
 		// Handle the WordPress hook 'profile_update' when an existing user has been updated and send off the webhook request.
-		//$user_updated_hook = new User_Updated();
-		//add_action( 'profile_update', array( $user_updated_hook, 'handle' ), 10, 2 );
-		//add_action( 'user_register', array( $user_updated_hook, 'handle' ), 10, 2 );
+		$profile_update_hook = new ProfileUpdate();
+		add_action( 'profile_update', array( $profile_update_hook, 'handle' ), 10, 2 );
 
 	}
 }

@@ -4,7 +4,7 @@
   "type": "project",
   "autoload": {
     "psr-4": {
-      "Fabiancdng\\WP_Hook_Expose\\": "src/"
+      "Fabiancdng\\WpHookExpose\\": "src/"
     }
   },
   "authors": [
