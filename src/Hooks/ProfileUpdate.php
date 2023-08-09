@@ -19,7 +19,7 @@ class ProfileUpdate {
 	 * Subscribe the 'handle' method to the according WordPress hooks.
 	 */
 	public function subscribe_wp_hooks(): void {
-		add_action( 'profile_update', array( $this, 'handle' ), 10, 2 );
+		add_action( 'profile_update', array( $this, 'handle' ), 10, 3 );
 	}
 
 	/**
@@ -52,10 +52,14 @@ class ProfileUpdate {
 		);
 
 		// Send the webhook request.
-		wp_remote_post(
-			$webhook_url,
-			array(
-				'body' => $body,
+		error_log(
+			wp_json_encode(
+				wp_remote_post(
+					$webhook_url,
+					array(
+						'body' => wp_json_encode( $body )
+					),
+				)
 			)
 		);
 	}

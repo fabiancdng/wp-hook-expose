@@ -23,35 +23,27 @@ class CategorySaved {
 	/**
 	 * Handle the WordPress hook 'saved_${taxonomy}' and send off the webhook request.
 	 *
-	 * @param int    $term_id      The ID of the term that was just saved.
-	 * @param int    $tt_id        The term taxonomy ID.
-	 * @param string $taxonomy     The taxonomy slug.
-	 * @param bool   $update       Whether this is an existing term being updated or not.
-	 * @param array  $previous_ids Array of term IDs of affected terms before the update, if any.
+	 * @param int  $term_id The ID of the term that was just saved.
+	 * @param int  $tt_id   The term taxonomy ID.
+	 * @param bool $update  Whether this is an existing term being updated or not.
 	 */
-	public function handle( int $term_id, int $tt_id, string $taxonomy, bool $update, array $previous_ids ): void {
-		if ( $taxonomy !== 'category' ) {
-			return;
-		}
-
+	public function handle( int $term_id, int $tt_id, bool $update, array $args ): void {
 		if ( $update ) {
 			$this->handle_category_update(
 				array(
-					'term_id'      => $term_id,
-					'tt_id'        => $tt_id,
-					'taxonomy'     => $taxonomy,
-					'update'       => $update,
-					'previous_ids' => $previous_ids,
+					'term_id' => $term_id,
+					'tt_id'   => $tt_id,
+					'update'  => $update,
+					'args'    => $args,
 				)
 			);
 		} else {
 			$this->handle_category_create(
 				array(
-					'term_id'      => $term_id,
-					'tt_id'        => $tt_id,
-					'taxonomy'     => $taxonomy,
-					'update'       => $update,
-					'previous_ids' => $previous_ids,
+					'term_id' => $term_id,
+					'tt_id'   => $tt_id,
+					'update'  => $update,
+					'args'    => $args,
 				)
 			);
 		}
@@ -75,6 +67,7 @@ class CategorySaved {
 		if ( empty( $webhook_request_body || ! is_array( $webhook_request_body ) ) ) {
 			return;
 		}
+
 		// Merge body with hook data.
 		$body = array_merge(
 			$webhook_request_body,
@@ -82,10 +75,14 @@ class CategorySaved {
 		);
 
 		// Send the webhook request.
-		wp_remote_post(
-			$webhook_url,
-			array(
-				'body' => $body,
+		error_log(
+			wp_json_encode(
+				wp_remote_post(
+					$webhook_url,
+					array(
+						'body' => wp_json_encode( $body )
+					),
+				)
 			)
 		);
 	}
@@ -115,10 +112,15 @@ class CategorySaved {
 		);
 
 		// Send the webhook request.
-		wp_remote_post(
-			$webhook_url,
-			array(
-				'body' => $body,
+		// Send the post request.
+		error_log(
+			wp_json_encode(
+				wp_remote_post(
+					$webhook_url,
+					array(
+						'body' => wp_json_encode( $body )
+					),
+				)
 			)
 		);
 	}

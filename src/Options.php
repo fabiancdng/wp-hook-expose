@@ -47,7 +47,7 @@ class Options {
 		register_setting( 'wp_hook_expose', 'wp_hook_expose' );
 
 		// Add a settings section for the "Post Created" event.
-		$this->register_section_event_webhook( 'Post Created', 'post_saved' );
+		$this->register_section_event_webhook( 'Post Created', 'post_created' );
 
 		// Add a setting section for the "Post Updated" event.
 		$this->register_section_event_webhook( 'Post Updated', 'post_updated' );

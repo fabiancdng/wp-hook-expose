@@ -110,11 +110,15 @@ class PostSaved {
 		);
 
 		// Send the post request.
-		wp_remote_post(
-			$webhook_url,
-			array(
-				'body' => wp_json_encode( $body )
-			),
+		error_log(
+			wp_json_encode(
+				wp_remote_post(
+					$webhook_url,
+					array(
+						'body' => wp_json_encode( $body )
+					),
+				)
+			)
 		);
 	}
 }
