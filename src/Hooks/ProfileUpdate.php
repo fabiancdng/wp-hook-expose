@@ -4,7 +4,7 @@
  * @package wp-hook-expose
  */
 
-namespace Fabiancdng\WpHookExpose\Hooks;
+namespace WpHookExpose\Hooks;
 
 use WP_User;
 
@@ -25,7 +25,7 @@ class ProfileUpdate {
 	/**
 	 * Handle the WordPress hook 'profile_update' and send off the webhook request.
 	 *
-	 * @param int   $user_id   The ID of the user that was just registered.
+	 * @param int $user_id The ID of the user that was just registered.
 	 * @param array $user_data The user data that was just registered.
 	 */
 	public function handle( int $user_id, WP_User $old_user_data, array $user_data ): void {

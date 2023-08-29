@@ -4,12 +4,12 @@
  * @package wp-hook-expose
  */
 
-namespace Fabiancdng\WpHookExpose;
+namespace WpHookExpose;
 
-use Fabiancdng\WpHookExpose\Hooks\ProfileUpdate;
-use Fabiancdng\WpHookExpose\Hooks\CategorySaved;
-use Fabiancdng\WpHookExpose\Hooks\PostSaved;
-use Fabiancdng\WpHookExpose\Hooks\UserRegister;
+use WpHookExpose\Hooks\ProfileUpdate;
+use WpHookExpose\Hooks\CategorySaved;
+use WpHookExpose\Hooks\PostSaved;
+use WpHookExpose\Hooks\UserRegister;
 
 // If this file is accessed directly, abort.
 defined( 'ABSPATH' ) || exit;

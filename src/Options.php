@@ -4,7 +4,7 @@
  * @package wp-hook-expose
  */
 
-namespace Fabiancdng\WpHookExpose;
+namespace WpHookExpose;
 
 
 // If this file is accessed directly, abort.

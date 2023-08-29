@@ -4,7 +4,7 @@
  * @package wp-hook-expose
  */
 
-namespace Fabiancdng\WpHookExpose\Hooks;
+namespace WpHookExpose\Hooks;
 
 
 // If this file is accessed directly, abort.
@@ -24,7 +24,7 @@ class UserRegister {
 	/**
 	 * Handle the WordPress hook 'user_register' and send off the webhook request.
 	 *
-	 * @param int   $user_id   The ID of the user that was just registered.
+	 * @param int $user_id The ID of the user that was just registered.
 	 * @param array $user_data The user data that was just registered.
 	 */
 	public function handle( int $user_id, array $user_data ): void {

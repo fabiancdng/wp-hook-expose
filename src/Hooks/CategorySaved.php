@@ -4,7 +4,7 @@
  * @package wp-hook-expose
  */
 
-namespace Fabiancdng\WpHookExpose\Hooks;
+namespace WpHookExpose\Hooks;
 
 // If this file is accessed directly, abort.
 defined( 'ABSPATH' ) || exit;
@@ -23,9 +23,9 @@ class CategorySaved {
 	/**
 	 * Handle the WordPress hook 'saved_${taxonomy}' and send off the webhook request.
 	 *
-	 * @param int  $term_id The ID of the term that was just saved.
-	 * @param int  $tt_id   The term taxonomy ID.
-	 * @param bool $update  Whether this is an existing term being updated or not.
+	 * @param int $term_id The ID of the term that was just saved.
+	 * @param int $tt_id The term taxonomy ID.
+	 * @param bool $update Whether this is an existing term being updated or not.
 	 */
 	public function handle( int $term_id, int $tt_id, bool $update, array $args ): void {
 		if ( $update ) {

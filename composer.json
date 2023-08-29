@@ -4,7 +4,7 @@
   "type": "project",
   "autoload": {
     "psr-4": {
-      "Fabiancdng\\WpHookExpose\\": "src/"
+      "WpHookExpose\\": "src/"
     }
   },
   "authors": [
