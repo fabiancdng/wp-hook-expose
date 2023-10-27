@@ -6,11 +6,6 @@
 
 namespace WpHookExpose;
 
-use WpHookExpose\Hooks\ProfileUpdate;
-use WpHookExpose\Hooks\CategorySaved;
-use WpHookExpose\Hooks\PostSaved;
-use WpHookExpose\Hooks\UserRegister;
-
 // If this file is accessed directly, abort.
 defined( 'ABSPATH' ) || exit;
 
@@ -37,14 +32,20 @@ class Plugin {
 	 * Initialize the plugin's functionality by adding all hook- and filter calls.
 	 */
 	public function initialize(): void {
-		// Register the admin settings in the WordPress dashboard.
-		( new Options() )->register_options_page();
+		// Instantiate WebhookController class (API for managing webhooks).
+		$webhook_controller = new WebhookController();
 
+		// Webhooks are stored in the WordPress options table, insure the option exists.
+		$webhook_controller->create_webhook_option();
 
-		// Register and subscribe events to their according WordPress hooks.
-		( new PostSaved() )->subscribe_wp_hooks();
-		( new UserRegister() )->subscribe_wp_hooks();
-		( new ProfileUpdate() )->subscribe_wp_hooks();
-		( new CategorySaved() )->subscribe_wp_hooks();
+		// Instantiate EventController class and inject dependencies.
+		// Register the events a webhook can listen to.
+		$event_controller = new EventController();
+		$event_controller->register_events();
+
+		// Instantiate the Dashboard class and inject dependencies.
+		// Initialize the dashboard page in the WordPress backend.
+		$dashboard = new Dashboard( $webhook_controller );
+		$dashboard->register_dashboard_pages();
 	}
 }

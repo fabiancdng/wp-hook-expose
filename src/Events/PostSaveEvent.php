@@ -4,7 +4,7 @@
  * @package wp-hook-expose
  */
 
-namespace WpHookExpose\Hooks;
+namespace WpHookExpose\Events;
 
 
 // If this file is accessed directly, abort.
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class Save_Post for handling the WordPress hook 'save_post' and sending off the webhook request.
  */
-class PostSaved {
+class PostSaveEvent {
 	/**
 	 * Subscribe the 'handle' method to the according WordPress hooks.
 	 */
@@ -26,9 +26,9 @@ class PostSaved {
 	/**
 	 * Handle the WordPress hook 'save_post' and send off the webhook request.
 	 *
-	 * @param int $post_id The ID of the post that was just saved.
-	 * @param WP_Post $post The post object that was just saved.
-	 * @param bool $update Whether this is an existing post being updated or not.
+	 * @param int     $post_id The ID of the post that was just saved.
+	 * @param WP_Post $post    The post object that was just saved.
+	 * @param bool    $update  Whether this is an existing post being updated or not.
 	 */
 	public function handle( int $post_id, WP_Post $post, bool $update ): void {
 		if ( $update ) {
@@ -43,8 +43,8 @@ class PostSaved {
 	 *
 	 * Option: wp_hook_expose[event_webhooks][post_created]
 	 *
-	 * @param int $post_id The ID of the post that was just saved.
-	 * @param WP_Post $post The post object that was just saved.
+	 * @param int     $post_id The ID of the post that was just saved.
+	 * @param WP_Post $post    The post object that was just saved.
 	 */
 	public function handle_post_create( int $post_id, WP_Post $post ): void {
 		$options              = get_option( 'wp_hook_expose' );
@@ -82,8 +82,8 @@ class PostSaved {
 	 *
 	 * Option: wp_hook_expose[event_webhooks][post_updated]
 	 *
-	 * @param int $post_id The ID of the post that was just saved.
-	 * @param WP_Post $post The post object that was just saved.
+	 * @param int     $post_id The ID of the post that was just saved.
+	 * @param WP_Post $post    The post object that was just saved.
 	 */
 	public function handle_post_update( int $post_id, WP_Post $post ): void {
 		$options              = get_option( 'wp_hook_expose' );
