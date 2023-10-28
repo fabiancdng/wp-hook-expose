@@ -53,7 +53,7 @@ class WebhookListTable extends \WP_List_Table {
 				'slug'             => $webhook_slug,
 				'event'            => '<code>' . $webhook['event'] . '</code>',
 				'url'              => $webhook['url'],
-				'last_executed_at' => $webhook['last_executed_at'] ?? 'Never',
+				'last_executed_at' => $webhook['last_execution'] ? $webhook['last_execution']['timestamp'] . ' (<code>' . $webhook['last_execution']['response_status_code'] . '</code>)' : 'Never',
 				'created_at'       => $webhook['created_at'],
 			);
 		}
