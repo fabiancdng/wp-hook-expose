@@ -65,4 +65,25 @@ class WebhookController {
 			)
 		);
 	}
+
+	/**
+	 * Deletes a webhook from the WordPress options table.
+	 *
+	 * @param string $slug The slug of the webhook to delete.
+	 */
+	public function delete_webhook( string $slug ): bool {
+		// Get all webhooks from the WordPress options table.
+		$webhooks = $this->get_webhooks();
+
+		// Delete the webhook from the webhooks array.
+		unset( $webhooks[ $slug ] );
+
+		// Update the webhooks in the WordPress options table.
+		return update_option(
+			'wp_hook_expose',
+			array(
+				'webhooks' => $webhooks,
+			)
+		);
+	}
 }

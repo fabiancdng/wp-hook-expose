@@ -90,7 +90,7 @@ class AddWebhookScreen extends Screen {
 				sanitize_title( $webhook['webhook_name'] ),
 				$webhook['webhook_name'],
 				$webhook['webhook_event'],
-				sanitize_url( $webhook['webhook_url'] ),
+				$webhook['webhook_url'],
 			);
 		}
 		?>

@@ -49,8 +49,9 @@ class WebhookListTable extends \WP_List_Table {
 		// Loop through all webhooks and add them to the table data.
 		foreach ( $webhooks as $webhook_slug => $webhook ) {
 			$table_data[] = array(
-				'name'             => '<b style="font-size: larger; padding: 10px;">' . $webhook['name'] . '</b> (<code>' . $webhook_slug . '</code>)',
-				'event'            => $webhook['event'],
+				'name'             => '<b style="font-size: larger;">' . $webhook['name'] . '</b>',
+				'slug'             => $webhook_slug,
+				'event'            => '<code>' . $webhook['event'] . '</code>',
 				'url'              => $webhook['url'],
 				'last_executed_at' => $webhook['last_executed_at'] ?? 'Never',
 				'created_at'       => $webhook['created_at'],
@@ -61,38 +62,12 @@ class WebhookListTable extends \WP_List_Table {
 	}
 
 	/**
-	 * Defines what data to show on each column of the table.
-	 *
-	 * @param array  $item        The data of the table row.
-	 * @param string $column_name The column name.
-	 */
-	public function column_default( $item, $column_name ) {
-		return $item[ $column_name ];
-	}
-
-	/**
-	 * Render checkboxes for (bulk) actions.
-	 *
-	 * @param array $item The current item.
-	 *
-	 * @return string HTML for the checkbox.
-	 */
-	public function column_cb( $item ): string {
-		return sprintf(
-			'<input type="checkbox" name="inquiries[]" id="%1$s" value="%2$s" />',
-			$item['id'],
-			$item['id']
-		);
-	}
-
-	/**
 	 * Overrides the parent columns method. Defines the columns to use in your listing table.
 	 *
 	 * @return array $columns Array of columns.
 	 */
 	public function get_columns(): array {
 		return array(
-			'cb'               => '<input type="checkbox" />',
 			'name'             => __( 'Name', 'wp-hook-expose' ),
 			'event'            => __( 'Event', 'wp-hook-expose' ),
 			'url'              => __( 'URL', 'wp-hook-expose' ),
@@ -102,9 +77,60 @@ class WebhookListTable extends \WP_List_Table {
 	}
 
 	/**
+	 * Renders the column content.
+	 *
+	 * @param array  $item        The data of the table row.
+	 * @param string $column_name The column name.
+	 */
+	public function column_default( $item, $column_name ) {
+		return $item[ $column_name ];
+	}
+
+	/**
+	 * Renders the contents of the name column (with edit and delete action links).
+	 *
+	 * @param array $item The data of the table row.
+	 */
+	public function column_name( $item ): string {
+		$actions = array(
+			// 'edit'   => sprintf( '<a href="?page=%s&action=%s&webhook_slug=%s">Edit</a>', $_REQUEST['page'], 'edit', $item['slug'] ),
+			'delete' => sprintf( '<a href="?page=%s&action=%s&webhook_slug=%s">Delete</a>', $_REQUEST['page'], 'delete', $item['slug'] ),
+		);
+
+		return sprintf( '%1$s %2$s', $item['name'], $this->row_actions( $actions ) );
+	}
+
+	/**
+	 * Handles actions for the table instructed via GET or POST and a page reload.
+	 */
+	public function handle_table_actions(): void {
+		// Handle the delete action.
+		if ( isset( $_GET['action'] ) && $_GET['action'] === 'delete' ) {
+			$status = $this->webhook_controller->delete_webhook( $_GET['webhook_slug'] );
+
+			if ( $status ) {
+				?>
+                <div class="notice notice-success is-dismissible">
+                    <p><?php esc_html_e( 'Webhook deleted successfully.', 'wp-hook-expose' ); ?></p>
+                </div>
+				<?php
+			} else {
+				?>
+                <div class="notice notice-error is-dismissible">
+                    <p><?php esc_html_e( 'An error occurred while deleting the webhook.', 'wp-hook-expose' ); ?></p>
+                </div>
+				<?php
+			}
+		}
+	}
+
+	/**
 	 * Overrides the parent prepare_items method. Prepares the list of items for displaying.
 	 */
 	public function prepare_items(): void {
+		// Handle table actions before loading the table.
+		$this->handle_table_actions();
+
 		// Define the columns to use in your listing table.
 		$columns          = $this->get_columns();
 		$hidden_columns   = array();

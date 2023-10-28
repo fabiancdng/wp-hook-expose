@@ -42,8 +42,8 @@ class Plugin {
 
 		// Instantiate EventController class and inject dependencies.
 		// Register the events a webhook can listen to.
-		$event_controller = new EventController();
-		$event_controller->register_events();
+		$event_controller = new EventController( $webhook_controller );
+		$event_controller->add_webhook_actions();
 
 		// Instantiate the Dashboard class and inject dependencies.
 		// Initialize the dashboard page in the WordPress backend.
