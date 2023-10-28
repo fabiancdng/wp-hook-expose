@@ -7,6 +7,8 @@
 namespace WpHookExpose;
 
 // If this file is accessed directly, abort.
+use WpHookExpose\Dashboard\Dashboard;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -14,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class Plugin {
 	/**
-	 * Create a new instance of the plugin class and run it.
+	 * Creates a new instance of the plugin class and run it.
 	 */
 	public static function create_and_run(): void {
 		$plugin = new Plugin();
@@ -22,14 +24,14 @@ class Plugin {
 	}
 
 	/**
-	 * Run the plugin (right when the main plugin file is loaded).
+	 * Runs the plugin (right when the main plugin file is loaded).
 	 */
 	public function run(): void {
 		add_action( 'plugins_loaded', array( $this, 'initialize' ) );
 	}
 
 	/**
-	 * Initialize the plugin's functionality by adding all hook- and filter calls.
+	 * Initializes the plugin's functionality by adding all hook- and filter calls.
 	 */
 	public function initialize(): void {
 		// Instantiate WebhookController class (API for managing webhooks).
