@@ -93,10 +93,13 @@ class Dashboard {
 	public function render_main_dashboard_page(): void {
 		?>
         <div class="wrap">
-            <h1><?php esc_html_e( 'WP Hook Expose', 'wp-hook-expose' ); ?></h1>
-            <p><?php esc_html_e( 'Here, you can manage all of your existing webhooks.', 'wp-hook-expose' ); ?></p>
-            <p><?php esc_html_e( 'Use the button below to create a new one.', 'wp-hook-expose' ); ?></p>
-            <a href="<?php echo esc_url( admin_url( 'admin.php?page=wp-hook-expose-add-webhook' ) ); ?>" class="button button-primary"><?php esc_html_e( 'Add New', 'wp-hook-expose' ); ?></a>
+            <h1 class="wp-heading-inline"><?php esc_html_e( 'Webhooks', 'wp-hook-expose' ); ?></h1>
+            <a class="page-title-action" href="<?php echo esc_url( admin_url( 'admin.php?page=wp-hook-expose-add-webhook' ) ); ?>">
+				<?php esc_html_e( 'Add New', 'wp-hook-expose' ); ?>
+            </a>
+            <hr class="wp-header-end">
+
+            <p><?php esc_html_e( 'Here, you can manage all of your webhooks and view information about their last execution.', 'wp-hook-expose' ); ?></p>
 			<?php
 			$this->webhook_list_table->prepare_items();
 			$this->webhook_list_table->display();

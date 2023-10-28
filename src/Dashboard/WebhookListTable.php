@@ -105,20 +105,33 @@ class WebhookListTable extends \WP_List_Table {
 	 */
 	public function handle_table_actions(): void {
 		// Handle the delete action.
-		if ( isset( $_GET['action'] ) && $_GET['action'] === 'delete' ) {
-			$status = $this->webhook_controller->delete_webhook( $_GET['webhook_slug'] );
+		if ( isset( $_GET['action'] ) ) {
+			switch ( $_GET['action'] ) {
+				case 'delete':
+					// Delete the webhook with the specified slug.
+					$status = $this->webhook_controller->delete_webhook( $_GET['webhook_slug'] );
 
-			if ( $status ) {
-				?>
-                <div class="notice notice-success is-dismissible">
-                    <p><?php esc_html_e( 'Webhook deleted successfully.', 'wp-hook-expose' ); ?></p>
-                </div>
-				<?php
-			} else {
-				?>
-                <div class="notice notice-error is-dismissible">
-                    <p><?php esc_html_e( 'An error occurred while deleting the webhook.', 'wp-hook-expose' ); ?></p>
-                </div>
+					if ( $status ) {
+						?>
+                        <div class="notice notice-success is-dismissible">
+                            <p><?php esc_html_e( 'Webhook deleted successfully.', 'wp-hook-expose' ); ?></p>
+                        </div>
+						<?php
+					} else {
+						?>
+                        <div class="notice notice-error is-dismissible">
+                            <p><?php esc_html_e( 'An error occurred while deleting the webhook.', 'wp-hook-expose' ); ?></p>
+                        </div>
+						<?php
+					}
+					break;
+
+				case 'webhook-added':
+					// A webhook was added and the user redirected here. Display a success message.
+					?>
+                    <div class="notice notice-success is-dismissible">
+                        <p><?php esc_html_e( 'Webhook added successfully.', 'wp-hook-expose' ); ?></p>
+                    </div>
 				<?php
 			}
 		}
