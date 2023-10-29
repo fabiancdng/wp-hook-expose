@@ -114,10 +114,14 @@ class WebhookController {
 	public function execute_webhook( string $webhook_slug, array $body ): void {
 		$webhooks = $this->get_webhooks();
 
-		// Get the plugin settings.
-		$plugin_settings      = get_option( 'wp_hook_expose_settings' );
-		$webhook_secret       = $plugin_settings['webhook_secret'] ?? '';
-		$debug_log_setting    = $plugin_settings['debug_log'] ?? '0';
+		// Get and parse the plugin settings.
+		$plugin_settings = get_option( 'wp_hook_expose_settings' );
+
+		// Authorization settings.
+		$webhook_secret = $plugin_settings['authorization']['webhook_secret'] ?? '';
+
+		// Logging settings.
+		$debug_log_setting    = $plugin_settings['logging']['debug_log'] ?? '0';
 		$is_debug_log_enabled = '1' === $debug_log_setting;
 
 		if ( isset( $webhooks[ $webhook_slug ] ) ) {
@@ -146,14 +150,18 @@ class WebhookController {
 				error_log( 'Webhook ' . $webhook_slug . ' response: ' . wp_json_encode( $response, true ) );
 			}
 
+			// Get array of data to retain last execution data in accordance with the plugin settings.
+			$last_execution_data = array();
+			if ( is_array( $response ) ) {
+				$last_execution_data = $this->create_last_execution_data( $response, $plugin_settings );
+			}
+
+
 			// Update the last executed at timestamp of the webhook and write it to the WordPress options table.
 			$this->update_webhook(
 				$webhook_slug,
 				array(
-					'last_execution' => array(
-						'timestamp'            => date( 'Y-m-d H:i:s' ),
-						'response_status_code' => wp_remote_retrieve_response_code( $response ),
-					),
+					'last_execution' => $last_execution_data,
 				)
 			);
 
@@ -164,6 +172,33 @@ class WebhookController {
 		if ( $is_debug_log_enabled ) {
 			error_log( 'Webhook ' . $webhook_slug . ' not found.' );
 		}
+	}
+
+	/**
+	 * Creates an array of data about the last execution of a webhook to store in the WordPress options table.
+	 *
+	 * Only in accordance with the settings set in the plugin settings.
+	 *
+	 * @param array $response        The response of the webhook request.
+	 * @param array $plugin_settings The plugin settings (wp_hook_expose_settings option).
+	 */
+	private function create_last_execution_data( array $response, array $plugin_settings ): array {
+		$retain_last_execution_data = $plugin_settings['logging']['retain_last_execution_data'] ?? array( 'timestamp', 'response_status_code' );
+
+		// Information about this webhook run to store in the WordPress options table.
+		$last_execution_data = array();
+
+		// If the response is an array & the ['retain_last_execution_data']['timestamp'] setting is set, add the data to the last execution data array.
+		if ( in_array( 'timestamp', $retain_last_execution_data, true ) ) {
+			$last_execution_data['timestamp'] = date( 'Y-m-d H:i:s' );
+		}
+
+		// If the response is an array & the ['retain_last_execution_data']['response_status_code'] setting is set, add the data to the last execution data array.
+		if ( in_array( 'response_status_code', $retain_last_execution_data, true ) ) {
+			$last_execution_data['response_status_code'] = wp_remote_retrieve_response_code( $response );
+		}
+
+		return $last_execution_data;
 	}
 
 	/**

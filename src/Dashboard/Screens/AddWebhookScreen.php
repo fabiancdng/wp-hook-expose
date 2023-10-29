@@ -7,8 +7,6 @@
 namespace WpHookExpose\Dashboard\Screens;
 
 // If this file is accessed directly, abort.
-use WpHookExpose\WebhookController;
-
 defined( 'ABSPATH' ) || exit;
 
 /**
