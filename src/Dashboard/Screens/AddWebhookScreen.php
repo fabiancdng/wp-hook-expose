@@ -91,7 +91,7 @@ class AddWebhookScreen extends Screen {
 				?>
                 <input type="text" name="wp_hook_expose_add_webhook[webhook_event]" id="wp_hook_expose_webhook_event" class="regular-text"/>
                 <p class="description"><?php echo __( 'The WordPress hook the webhook binds to (for example <code>save_post</code>, <code>profile_update</code>).', 'wp-hook-expose' ); ?></p>
-                <p class="description"><?php echo __( 'See the <a href="https://developer.wordpress.org/reference/hooks/">WordPress documentation</a> for a list of available hooks.', 'wp-hook-expose' ); ?></p>
+                <p class="description"><?php echo __( 'See the <a href="https://developer.wordpress.org/reference/hooks/" target="_blank">WordPress documentation</a> for a list of available hooks.', 'wp-hook-expose' ); ?></p>
                 <p class="description"><?php esc_html_e( 'Third-party hooks are supported as well.', 'wp-hook-expose' ); ?></p>
 				<?php
 			},

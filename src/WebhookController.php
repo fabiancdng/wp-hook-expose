@@ -114,10 +114,24 @@ class WebhookController {
 	public function execute_webhook( string $webhook_slug, array $body ): void {
 		$webhooks = $this->get_webhooks();
 
+		// Get the plugin settings.
+		$plugin_settings      = get_option( 'wp_hook_expose_settings' );
+		$webhook_secret       = $plugin_settings['webhook_secret'] ?? '';
+		$debug_log_setting    = $plugin_settings['debug_log'] ?? '0';
+		$is_debug_log_enabled = '1' === $debug_log_setting;
+
 		if ( isset( $webhooks[ $webhook_slug ] ) ) {
 			$webhook = $webhooks[ $webhook_slug ];
 
-			error_log( 'Webhook ' . $webhook_slug . ' called: ' . wp_json_encode( $body, true ) );
+			// Log the request.
+			if ( $is_debug_log_enabled ) {
+				error_log( 'Webhook ' . $webhook_slug . ' called: ' . wp_json_encode( $body, true ) );
+			}
+
+			// If a webhook secret is set in the plugin settings, add it to the body.
+			if ( ! empty( $webhook_secret ) ) {
+				$body['wp_webhook_secret'] = $webhook_secret;
+			}
 
 			// Send the request to the webhook URL.
 			$response = wp_remote_post(
@@ -128,7 +142,9 @@ class WebhookController {
 			);
 
 			// Log the response.
-			error_log( 'Webhook ' . $webhook_slug . ' response: ' . wp_json_encode( $response, true ) );
+			if ( $is_debug_log_enabled ) {
+				error_log( 'Webhook ' . $webhook_slug . ' response: ' . wp_json_encode( $response, true ) );
+			}
 
 			// Update the last executed at timestamp of the webhook and write it to the WordPress options table.
 			$this->update_webhook(
@@ -145,7 +161,9 @@ class WebhookController {
 		}
 
 		// Log an error message.
-		error_log( 'Webhook ' . $webhook_slug . ' not found.' );
+		if ( $is_debug_log_enabled ) {
+			error_log( 'Webhook ' . $webhook_slug . ' not found.' );
+		}
 	}
 
 	/**
