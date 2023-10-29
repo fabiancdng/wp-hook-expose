@@ -55,7 +55,7 @@ class WebhookController {
 			$webhooks[ $slug ] = array(
 				'name'             => sanitize_text_field( $name ),
 				'event'            => sanitize_text_field( $event ),
-				'url'              => esc_url_raw( $url ),
+				'url'              => sanitize_url( $url ),
 				'last_executed_at' => null,
 				'created_at'       => date( 'Y-m-d H:i:s' ),
 			);
@@ -109,9 +109,9 @@ class WebhookController {
 	 * Executes a webhook by sending the HTTP request to the specified URL.
 	 *
 	 * @param string $webhook_slug The slug of the webhook to execute.
-	 * @param array  $body         The body to send along the request for the webhook.
+	 * @param array  $args         The args of the WordPress hook to send in the request body.
 	 */
-	public function execute_webhook( string $webhook_slug, array $body ): void {
+	public function execute_webhook( string $webhook_slug, array $args ): void {
 		$webhooks = $this->get_webhooks();
 
 		// Get and parse the plugin settings.
@@ -125,16 +125,22 @@ class WebhookController {
 		$is_debug_log_enabled = '1' === $debug_log_setting;
 
 		if ( isset( $webhooks[ $webhook_slug ] ) ) {
+			// The webhook to execute.
 			$webhook = $webhooks[ $webhook_slug ];
 
-			// Log the request.
-			if ( $is_debug_log_enabled ) {
-				error_log( 'Webhook ' . $webhook_slug . ' called: ' . wp_json_encode( $body, true ) );
-			}
+			// The body to sent to the webhook URL.
+			$body = array(
+				'args' => $args,
+			);
 
 			// If a webhook secret is set in the plugin settings, add it to the body.
 			if ( ! empty( $webhook_secret ) ) {
 				$body['wp_webhook_secret'] = $webhook_secret;
+			}
+
+			// Log the request.
+			if ( $is_debug_log_enabled ) {
+				error_log( 'Webhook ' . $webhook_slug . ' called: ' . wp_json_encode( $body, true ) );
 			}
 
 			// Send the request to the webhook URL.
