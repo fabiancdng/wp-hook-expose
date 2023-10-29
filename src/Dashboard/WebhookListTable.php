@@ -49,12 +49,12 @@ class WebhookListTable extends \WP_List_Table {
 		// Loop through all webhooks and add them to the table data.
 		foreach ( $webhooks as $webhook_slug => $webhook ) {
 			$table_data[] = array(
-				'name'             => '<b style="font-size: larger;">' . $webhook['name'] . '</b>',
-				'slug'             => $webhook_slug,
-				'event'            => '<code>' . $webhook['event'] . '</code>',
-				'url'              => $webhook['url'],
-				'last_executed_at' => $webhook['last_execution'] ? $webhook['last_execution']['timestamp'] . ' (<code>' . $webhook['last_execution']['response_status_code'] . '</code>)' : 'Never',
-				'created_at'       => $webhook['created_at'],
+				'name'           => $webhook['name'],
+				'slug'           => $webhook_slug,
+				'event'          => $webhook['event'],
+				'url'            => $webhook['url'],
+				'last_execution' => $webhook['last_execution'] ?? array(),
+				'created_at'     => $webhook['created_at'],
 			);
 		}
 
@@ -68,11 +68,11 @@ class WebhookListTable extends \WP_List_Table {
 	 */
 	public function get_columns(): array {
 		return array(
-			'name'             => __( 'Name', 'wp-hook-expose' ),
-			'event'            => __( 'Event', 'wp-hook-expose' ),
-			'url'              => __( 'URL', 'wp-hook-expose' ),
-			'last_executed_at' => __( 'Last Executed At', 'wp-hook-expose' ),
-			'created_at'       => __( 'Created At', 'wp-hook-expose' ),
+			'name'           => __( 'Name', 'wp-hook-expose' ),
+			'event'          => __( 'Event', 'wp-hook-expose' ),
+			'url'            => __( 'URL', 'wp-hook-expose' ),
+			'last_execution' => __( 'Last Execution', 'wp-hook-expose' ),
+			'created_at'     => __( 'Created At', 'wp-hook-expose' ),
 		);
 	}
 
@@ -81,6 +81,8 @@ class WebhookListTable extends \WP_List_Table {
 	 *
 	 * @param array  $item        The data of the table row.
 	 * @param string $column_name The column name.
+	 *
+	 * @return string The column content.
 	 */
 	public function column_default( $item, $column_name ) {
 		return $item[ $column_name ];
@@ -90,14 +92,60 @@ class WebhookListTable extends \WP_List_Table {
 	 * Renders the contents of the name column (with edit and delete action links).
 	 *
 	 * @param array $item The data of the table row.
+	 *
+	 * @return string The contents of the name column.
 	 */
 	public function column_name( $item ): string {
+		$name = '<b style="font-size: larger;">' . $item['name'] . '</b>';
+
 		$actions = array(
 			// 'edit'   => sprintf( '<a href="?page=%s&action=%s&webhook_slug=%s">Edit</a>', $_REQUEST['page'], 'edit', $item['slug'] ),
 			'delete' => sprintf( '<a href="?page=%s&action=%s&webhook_slug=%s">Delete</a>', $_REQUEST['page'], 'delete', $item['slug'] ),
 		);
 
-		return sprintf( '%1$s %2$s', $item['name'], $this->row_actions( $actions ) );
+		return sprintf( '%1$s %2$s', $name, $this->row_actions( $actions ) );
+	}
+
+	/**
+	 * Renders the contents of the event column.
+	 *
+	 * @param array $item The data of the table row.
+	 *
+	 * @return string The contents of the event column.
+	 */
+	public function column_event( $item ): string {
+		return '<code>' . $item['event'] . '</code>';
+	}
+
+	/**
+	 * Renders the contents of the last_execution column.
+	 *
+	 * @param array $item The data of the table row.
+	 *
+	 * @return string The contents of the last_execution column.
+	 */
+	public function column_last_execution( $item ): string {
+		if ( ! empty( $item['last_execution']['timestamp'] ) ) {
+			$last_executed_at = $item['last_execution']['timestamp'];
+			ob_start();
+			?>
+            <p>
+				<?php
+				echo esc_html( $last_executed_at );
+
+				if ( ! empty( $item['last_execution']['response_status_code'] ) ) {
+					?>
+                    (<code><?php echo esc_html( $item['last_execution']['response_status_code'] ); ?></code>)
+					<?php
+				}
+				?>
+
+            </p>
+			<?php
+			return ob_get_clean();
+		}
+
+		return esc_html__( 'Never', 'wp-hook-expose' );
 	}
 
 	/**
