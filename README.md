@@ -1,6 +1,10 @@
-# WP Hook Expose
+<div align="center">
+<h1>WP Hook Expose</h1>
 
-A simple and fast way to turn WordPress hooks into custom webhooks.
+<b>A simple and fast way to turn WordPress hooks into custom webhooks.</b>
+</div>
+
+---
 
 ## Table of Contents
 
