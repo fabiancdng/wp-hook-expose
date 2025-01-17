@@ -13,5 +13,8 @@ A simple and fast way to turn WordPress hooks into custom webhooks.
 
 == Changelog ==
 
+= 1.0.1 =
+* Include license
+
 = 1.0 =
 * Initial release
