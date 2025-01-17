@@ -1,5 +1,6 @@
 {
   "name": "fabiancdng/wp-hook-expose",
+  "version": "1.1.0",
   "description": "A lightweight plugin to create webhooks in WordPress.",
   "type": "project",
   "autoload": {
@@ -15,6 +16,6 @@
     }
   ],
   "require": {
-    "yahnis-elsts/plugin-update-checker": "^5.3"
+    "yahnis-elsts/plugin-update-checker": "^5.5"
   }
 }
