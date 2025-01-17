@@ -3,7 +3,7 @@
  * Plugin Name:       WP Hook Expose
  * Plugin URI:        https://github.com/fabiancdng/wp-hook-expose
  * Description:       A simple and fast way to turn WordPress hooks into custom webhooks.
- * Version:           1.0.1
+ * Version:           1.1
  * Requires at least: 6.0
  * Author:            Fabian Reinders
  * Author URI:        https://github.com/fabiancdng
