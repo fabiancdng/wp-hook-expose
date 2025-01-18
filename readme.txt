@@ -13,6 +13,9 @@ A simple and fast way to turn WordPress hooks into custom webhooks.
 
 == Changelog ==
 
+= 1.1.1 =
+* Fix: Critical error related to PUC
+
 = 1.1 =
 * Upgrade yahnis-elsts/plugin-update-checker to v5.5
 * Tested up to 6.7.1
