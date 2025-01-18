@@ -9,8 +9,8 @@ namespace WpHookExpose;
 // If this file is accessed directly, abort.
 use WpHookExpose\Dashboard\Dashboard;
 use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
-use YahnisElsts\PluginUpdateChecker\v5p3\Vcs\Api;
-use YahnisElsts\PluginUpdateChecker\v5p3\Vcs\GitHubApi;
+use YahnisElsts\PluginUpdateChecker\v5p5\Vcs\Api;
+use YahnisElsts\PluginUpdateChecker\v5p5\Vcs\GitHubApi;
 
 defined( 'ABSPATH' ) || exit;
 
